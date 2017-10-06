@@ -13,7 +13,12 @@ const stunUrl = 'stun:' + window.location.hostname + ':3478';
 const turnUrl = 'turn:' + window.location.hostname + ':3478';
 var pcConfig = {
   'iceServers': [{
-    'urls': [stunUrl, turnUrl]
+    'urls': turnUrl,
+    'username': 'username',
+    'credential': 'credential'
+  },{
+    urls: stunUrl
+
   }]
 };
 
@@ -156,7 +161,7 @@ window.onbeforeunload = function() {
 
 function createPeerConnection() {
   try {
-    pc = new RTCPeerConnection(null);
+    pc = new RTCPeerConnection(pcConfig);
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
@@ -171,10 +176,10 @@ function createPeerConnection() {
 function handleIceCandidate(event) {
   console.log('icecandidate event: ', event);
   if (event.candidate) {
-    // if(event.candidate.candidate.indexOf("relay")<0){
-    //   console.log("SKIPPING NON TURN CANDIDATE")
-    //   return;
-    // }
+    if(event.candidate.candidate.indexOf("relay")<0){
+      // console.log("SKIPPING NON TURN CANDIDATE")
+      // return;
+    }
     sendMessage('candidate', {
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,

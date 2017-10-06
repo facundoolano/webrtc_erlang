@@ -28,7 +28,10 @@ start(_StartType, _StartArgs) ->
                                #{env => #{dispatch => Dispatch}}
                               ),
   syn:init(),
-  stun_listener:add_listener(3478, udp, [{use_turn, true}]),
+  stun_listener:add_listener(3478, udp, [{use_turn, true},
+                                         {auth_type, user},
+                                         {auth_realm, <<"localhost">>}, %% FIXME remove hardcoding of this
+                                         {auth_fun, fun(_User, _Realm) -> <<"credential">> end}]),
   webrtc_erlang_sup:start_link().
 
 %%--------------------------------------------------------------------
