@@ -9,8 +9,8 @@ var remoteStream;
 var turnReady;
 
 
-const stunUrl = 'stun:' + window.location.host + ':3478';
-const turnUrl = 'turn:' + window.location.host + ':3478';
+const stunUrl = 'stun:' + window.location.hostname + ':3478';
+const turnUrl = 'turn:' + window.location.hostname + ':3478';
 var pcConfig = {
   'iceServers': [{
     'urls': [stunUrl, turnUrl]
