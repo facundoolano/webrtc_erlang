@@ -13,7 +13,7 @@ const stunUrl = 'stun:' + window.location.host + ':3478';
 const turnUrl = 'turn:' + window.location.host + ':3478';
 var pcConfig = {
   'iceServers': [{
-    'urls': stunUrl
+    'urls': [stunUrl, turnUrl]
   }]
 };
 
@@ -72,10 +72,6 @@ function joined () {
 
 function candidate(data) {
   if (isStarted) {
-    console.log("CONSTRUCTING CANDIDATE", {
-      sdpMLineIndex: data.label,
-      candidate: data.candidate
-    }, data);
     var candidate = new RTCIceCandidate({
       sdpMLineIndex: data.label,
       candidate: data.candidate
@@ -88,7 +84,6 @@ function offer (data) {
   if (!isInitiator && !isStarted) {
     maybeStart();
   }
-  console.log("SETTING DESCR", data)
   pc.setRemoteDescription(new RTCSessionDescription(data));
   doAnswer();
 }
@@ -176,6 +171,10 @@ function createPeerConnection() {
 function handleIceCandidate(event) {
   console.log('icecandidate event: ', event);
   if (event.candidate) {
+    // if(event.candidate.candidate.indexOf("relay")<0){
+    //   console.log("SKIPPING NON TURN CANDIDATE")
+    //   return;
+    // }
     sendMessage('candidate', {
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,
