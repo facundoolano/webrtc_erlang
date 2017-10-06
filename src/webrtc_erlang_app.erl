@@ -27,6 +27,7 @@ start(_StartType, _StartArgs) ->
                                [{port, 8080}],
                                #{env => #{dispatch => Dispatch}}
                               ),
+  syn:init(),
   webrtc_erlang_sup:start_link().
 
 %%--------------------------------------------------------------------
