@@ -28,7 +28,7 @@ start(_StartType, _StartArgs) ->
                                #{env => #{dispatch => Dispatch}}
                               ),
   syn:init(),
-  stun_listener:add_listener(3478, udp, []),
+  stun_listener:add_listener(3478, udp, [{use_turn, true}]),
   webrtc_erlang_sup:start_link().
 
 %%--------------------------------------------------------------------

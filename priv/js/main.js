@@ -10,6 +10,7 @@ var turnReady;
 
 
 const stunUrl = 'stun:' + window.location.host + ':3478';
+const turnUrl = 'turn:' + window.location.host + ':3478';
 var pcConfig = {
   'iceServers': [{
     'urls': stunUrl
