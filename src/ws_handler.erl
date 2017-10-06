@@ -7,8 +7,7 @@
         ]).
 
 init(Req, _) ->
-  %% TODO take room name from connection url
-  Room = <<"example">>,
+  Room  = cowboy_req:binding(room, Req),
   {cowboy_websocket, Req, #{room => Room}}.
 
 websocket_init(State) ->

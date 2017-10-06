@@ -22,9 +22,9 @@ var sdpConstraints = {
 
 /////////////////////////////////////////////
 
-// TODO multiple rooms
-const room = 'foo';
-const wsUrl = 'ws://' + window.location.host + '/websocket';
+const room = window.location.pathname.split(/\//g)[1] ;
+console.log("room is", room);
+const wsUrl = 'ws://' + window.location.host + '/websocket/' + room;
 const socket = new WebSocket(wsUrl);
 
 function sendMessage(event, message) {
