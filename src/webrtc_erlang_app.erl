@@ -29,6 +29,7 @@ start(_StartType, _StartArgs) ->
                               ),
   syn:init(),
   stun_listener:add_listener(3478, udp, [{use_turn, true},
+                                         {turn_ip, <<"127.0.0.1">>}, %% FIXME remove hardcoding of this
                                          {auth_type, user},
                                          {auth_realm, <<"localhost">>}, %% FIXME remove hardcoding of this
                                          {auth_fun, fun(_User, _Realm) -> <<"credential">> end}]),
