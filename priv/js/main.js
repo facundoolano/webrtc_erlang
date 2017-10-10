@@ -121,12 +121,13 @@ navigator.mediaDevices.getUserMedia({
 })
 .then(gotStream)
 .catch(function(e) {
+  console.log(e.stack);
   alert('getUserMedia() error: ' + e.name);
 });
 
 function gotStream(stream) {
   console.log('Adding local stream.');
-  localVideo.src = window.URL.createObjectURL(stream);
+  localVideo.srcObject = stream;
   localStream = stream;
   sendMessage('gotMedia');
   if (isInitiator) {
@@ -163,7 +164,7 @@ function createPeerConnection() {
   try {
     pc = new RTCPeerConnection(pcConfig);
     pc.onicecandidate = handleIceCandidate;
-    pc.onaddstream = handleRemoteStreamAdded;
+    pc.ontrack = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
     console.log('Created RTCPeerConnnection');
   } catch (e) {
@@ -188,12 +189,6 @@ function handleIceCandidate(event) {
   } else {
     console.log('End of candidates.');
   }
-}
-
-function handleRemoteStreamAdded(event) {
-  console.log('Remote stream added.');
-  remoteVideo.src = window.URL.createObjectURL(event.stream);
-  remoteStream = event.stream;
 }
 
 function handleCreateOfferError(event) {
@@ -227,8 +222,10 @@ function onCreateSessionDescriptionError(error) {
 
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
-  remoteVideo.src = window.URL.createObjectURL(event.stream);
-  remoteStream = event.stream;
+  if(!remoteVideo.srcObject) {
+    remoteVideo.srcObject = event.streams[0];
+    remoteStream = event.streams[0];
+  }
 }
 
 function handleRemoteStreamRemoved(event) {
