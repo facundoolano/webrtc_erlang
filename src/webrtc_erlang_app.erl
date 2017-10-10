@@ -29,10 +29,10 @@ start(_StartType, _StartArgs) ->
                               ),
   syn:init(),
   stun_listener:add_listener(3478, udp, [{use_turn, true},
-                                         {turn_ip, <<"127.0.0.1">>}, %% FIXME remove hardcoding of this
+                                         {turn_ip, config(turn_ip)},
                                          {auth_type, user},
-                                         {auth_realm, <<"localhost">>}, %% FIXME remove hardcoding of this
-                                         {auth_fun, fun(_User, _Realm) -> <<"credential">> end}]),
+                                         {auth_realm, config(auth_realm)},
+                                         {auth_fun, fun(_User, _Realm) -> config(password) end}]),
   webrtc_erlang_sup:start_link().
 
 %%--------------------------------------------------------------------
@@ -42,3 +42,6 @@ stop(_State) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
+config(Key) ->
+  {ok, Value} = application:get_env(webrtc_erlang, Key),
+  Value.
